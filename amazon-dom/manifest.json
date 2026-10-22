@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Amazon DOM Live",
+  "version": "1.0.0",
+
+  "permissions": [
+    "debugger",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "https://www.amazon.in/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' ws://localhost:8080"
+  }
+}
