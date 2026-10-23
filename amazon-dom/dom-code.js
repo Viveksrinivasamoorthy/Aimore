@@ -1,10 +1,3 @@
-/* const searchbox = document.querySelector("#twotabsearchtextbox");
-
-if (searchbox) {
-    searchbox.value = "iphone 18 pro";
-}
- */
-document.body.style.backgroundColor = "yellow";
 
 // Change the cart text temporarily (refresh page to undo)
 document.querySelector('#nav-cart-count').textContent = "99";
@@ -38,7 +31,7 @@ logo.classList.contains('highlight'); // true/false
 
 // Inline styles
 logo.style.border = '3px solid red';
-logo.style.padding = '10px';
+logo.style.padding = '20px';
 
 
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -46,7 +39,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 
-document.querySelector('#twotabsearchtextbox').value = 'mechanical keyboard';
+document.querySelector('#twotabsearchtextbox').value = 'iphone 18 duo';
+
+
 
 
 setTimeout(() => {
@@ -63,3 +58,5 @@ btn.textContent = '↑ Top';
 btn.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:50%;background:#232f3e;color:white;border:none;cursor:pointer;z-index:9999';
 btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 document.body.appendChild(btn);
+
+
