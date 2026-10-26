@@ -1,56 +1,3 @@
-// PRE-CLASS VERIFICATION SCRIPT — run on each page type and note results
-const checks = {
-  "Search box":        "#twotabsearchtextbox",
-  "Search button":     "#nav-search-submit-button",
-  "Logo":              "#nav-logo-sprites",
-  "Cart link":         "#nav-cart",
-  "Account link":      "#nav-link-accountList",
-  "Category dropdown": "#searchDropdownBox",
-  "Result container":  "div[data-component-type='s-search-result']",
-  "Result with ASIN":  "div[data-asin]",
-  "Result title h2":   "div[data-component-type='s-search-result'] h2",
-  "Result title span": "div[data-component-type='s-search-result'] h2 span",
-  "Result link":       "div[data-component-type='s-search-result'] h2 a",
-  "Result image":      "div[data-component-type='s-search-result'] img.s-image",
-  "Product page title":"#productTitle"
-};
-const report = Object.entries(checks).map(([purpose, sel]) => ({
-  purpose,
-  selector: sel,
-  count: document.querySelectorAll(sel).length
-}));
-console.table(report);
-
-console.log(document.body.children.length);
-console.log(document.body.firstElementChild);
-
-
-const box = document.querySelector("#twotabsearchtextbox");
-console.log(box);
-console.log(box.tagName, box.id, box.className, box.getAttribute("name"));
-
-
-// Both return the same element (if the ID exists).
-document.getElementById("twotabsearchtextbox")
-document.querySelector("#twotabsearchtextbox")
-
-
-document.querySelector("input[type='text']")
-const len = document.querySelectorAll("a").length
-console.log("length of a:",len)
-
-
-// Part C — Search results page. First: type headphones in the search box 
-// // and press Enter (or go to https://www.amazon.in/s?k=headphones). Wait for results to load.
-document.querySelectorAll("div[data-component-type='s-search-result']").length
-document.querySelectorAll("div[data-asin]").length
-
-const results = document.querySelectorAll("div[data-component-type='s-search-result']");
-console.log("Products found:", results.length);
-
-// to check the results go to elements and check for selector[data-]
-
-
 const first = document.querySelector("div[data-component-type='s-search-result']");
 const all = document.querySelectorAll("div[data-component-type='s-search-result']");
 
@@ -69,38 +16,60 @@ const nonEmpty = Array.from(all).filter(el => el.getAttribute("data-asin"));
 console.log(nonEmpty.length);
 
 
+// 1. Gather all unique attribute names present across any of the result elements
+const attributeNames = new Set();
 
-/*
-Topic 6 — Reading DOM Elements
-Explanation
-Property	Meaning
-innerText	Text a user sees (respects CSS visibility, line breaks)
-textContent	All text in the DOM, including hidden
-innerHTML	HTML markup inside the element, as a string
-value	Current contents of an input
-tagName	Uppercase tag name
-id	The id attribute
-className	The class attribute string
+all.forEach(el => {
+  // el.attributes is a NamedNodeMap containing all attributes on the element
+  Array.from(el.attributes).forEach(attr => {
+    attributeNames.add(attr.name);
+  });
+});
 
-
-Page: search results page.
-Action: type "laptop" in the search box on the home page, press Enter, and wait.
-*/
+console.log("--- All Unique Attribute Names Found ---");
+console.log(Array.from(attributeNames));
 
 
-// 1) INPUT — value
+// 2. Map out a detailed breakdown showing attribute names and their sample values for each item
+const elementDetails = Array.from(all).map((el, index) => {
+  const attrs = {};
+  Array.from(el.attributes).forEach(attr => {
+    attrs[attr.name] = attr.value;
+  });
+  
+  return {
+    index: index + 1,
+    tag: el.tagName.toLowerCase(),
+    attributes: attrs
+  };
+});
+
+console.log("--- Detailed Element Attributes ---");
+console.log(elementDetails);
+
+
+const box = document.querySelector("#twotabsearchtextbox");
+console.log(box);
+console.log(box.tagName, box.id, box.className, box.getAttribute("name"));
+
+
 const box1 = document.querySelector("#twotabsearchtextbox");
-console.log("value:", box1.value);
+box1.value = "wireless mouse";
+console.log(box1.value);
 
-// 2) RESULT TITLE — text
-const item = document.querySelector("div[data-component-type='s-search-result']");
-const h2 = item.querySelector("h2");
-console.log("tag:", h2.tagName);
-console.log("innerText:", h2.innerText);
-console.log("textContent:", h2.textContent);
-console.log("innerHTML:", h2.innerHTML);
 
-/*
-What to Observe
+const box2 = document.querySelector("#twotabsearchtextbox");
+box2.style.fontSize = "30px";
+box2.style.border = "3px solid red";
 
-Compare innerText vs textContent vs innerHTML for the same element. 
+
+
+const box3 = document.querySelector("#twotabsearchtextbox");
+box3.focus();                    // cursor goes into the box
+box3.value = "keyboard";
+box3.blur();                     // focus leaves the box
+
+// Optional: submit the search
+document.querySelector("#nav-search-submit-button").click();
+
+

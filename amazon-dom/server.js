@@ -17,13 +17,13 @@ wss.on("connection", socket => {
 
     console.log("Extension connected");
 
-    // Send current dom-code.js immediately
+    // Send current DOM-Class1.js immediately
     const code = fs.readFileSync(filePath, "utf8");
 
     socket.send(code);
 });
 
-// Watch dom-code.js
+// Watch DOM-Class1.js
 fs.watch(filePath, eventType => {
 
     if (eventType === "change") {
