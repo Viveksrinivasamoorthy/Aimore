@@ -1,4 +1,51 @@
-const {test,expect} =require('@playwright/test');
+const { test, expect } = require('@playwright/test');
+
+test('alert with ok', async ({ page }) => {
+
+    console.log("Step 1: Navigating to the website");
+
+    await page.goto('https://testautomationpractice.blogspot.com/');
+    await page.waitForTimeout(3000);
+
+    console.log("Step 2: Website navigation completed");
+
+    // Register dialog handler
+    console.log("Step 3: Enabling alert handling");
+
+    page.on('dialog', async dialog => {
+
+        console.log("Step 4: Alert dialog detected");
+
+        console.log("Dialog Type:", dialog.type());
+
+        console.log("Dialog Message:", dialog.message());
+
+        expect(dialog.type()).toContain('alert');
+        await page.waitForTimeout(10000);
+
+        expect(dialog.message()).toContain('I am an alert box!');
+
+        console.log("Step 5: Alert validation successful");
+
+        await page.waitForTimeout(10000);
+        await dialog.accept();
+        
+
+        console.log("Step 6: Alert accepted successfully");
+
+    });
+
+    console.log("Step 7: Clicking the alert button");
+
+    await page.click("//button[@id='alertBtn']");
+    
+
+    console.log("Step 8: Alert test execution completed");
+
+});
+
+/*const {test,expect} =require('@playwright/test');
+
 test('alert with ok',async({page})=>{
     await page.goto('https://testautomationpractice.blogspot.com/');
     // enabling alert handling // dilago window handler
@@ -11,6 +58,7 @@ test('alert with ok',async({page})=>{
     await page.click("//button[@id='alertBtn']");
 
 })
+
 
 test('confirmation alert box',async({page})=>{
     await page.goto('https://testautomationpractice.blogspot.com/');
@@ -45,4 +93,4 @@ test('promt box',async({page})=>{
     await expect(page.locator("//*[@id='demo']")).toHaveText('Hello divya! How are you today?');
     await page.waitForTimeout(3000);
 
-})
+}) */

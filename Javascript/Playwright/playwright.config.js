@@ -38,8 +38,11 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      viewport: { width: 1920, height: 1080 },
+      screenshot: 'on',
+      trace: 'on',
     },
-
+/*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
@@ -49,7 +52,7 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-
+*/
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',

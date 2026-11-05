@@ -1,0 +1,42 @@
+Code	Explanation
+require()	    Imports Playwright functions
+test()	        Defines a test case
+async	        Allows asynchronous operations
+page	        Represents a browser tab
+await	        Waits for an asynchronous operation
+page.goto()	    Navigates to a URL
+page.title()	Gets the webpage title
+expect()	    Checks the expected result
+toHaveTitle()	Verifies the page title
+
+
+npx playwright test
+
+
+npx playwright test first-test.spec.js
+
+npx playwright test first-test.spec.js --headed
+
+
+npx playwright show-report
+
+
+Browser execution
+
+Run the same test in:
+- Headless mode
+- Headed mode
+Observe the difference.
+
+
+Important Concepts to Remember
+Concept	Remember
+Playwright	Browser automation framework
+Node.js	Executes JavaScript outside the browser
+npm	Package manager
+Test	Individual test case
+Page	Browser tab
+Browser Context	Isolated session
+Locator	Identifies webpage elements
+Assertion	Verifies expected results
+Async/Await	Handles asynchronous operations

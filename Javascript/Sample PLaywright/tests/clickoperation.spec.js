@@ -3,6 +3,8 @@ test('rightclick',async({page})=>{
     await page.goto('https://swisnl.github.io/jQuery-contextMenu/demo.html');
     var rc=await page.locator("(//*[text()='right click me'])[1]");
     await rc.click({button: 'right'});
+    await page.waitForTimeout(5000);
+
     
     
 })
@@ -10,10 +12,11 @@ test('doubleclick',async({page})=>{
     await page.goto('https://testautomationpractice.blogspot.com/');
     var dc=await page.locator("(//*[text()='Copy Text'])");
     await dc.dblclick();
+    await page.waitForTimeout(5000);
     
     
 })
-
+/*
 test.only('darg and drop',async({page})=>{
     await page.goto('http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html');
     const s=await page.locator("#box2");
@@ -24,7 +27,7 @@ test.only('darg and drop',async({page})=>{
     await page.mouse.down()
 
     await d.hover()
-    await page.mouse.up()*/
+    await page.mouse.up()
 
     // approach2
 
@@ -33,6 +36,6 @@ test.only('darg and drop',async({page})=>{
     await page.waitForTimeout(6000);
 
 })
-
+*/
 
 
