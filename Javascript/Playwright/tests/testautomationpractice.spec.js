@@ -17,7 +17,7 @@ test('Verify page and enter student name', async ({ page }) => {
 
     await page.locator("//button[normalize-space()='START']").click();
 
-    await page.screenshot({ path: "./screenshots/started.png" });
+    // await page.screenshot({ path: "./screenshots/started.png" });
 
 
 
