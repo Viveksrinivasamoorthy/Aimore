@@ -1,0 +1,632 @@
+PLAYWRIGHT WITH JAVASCRIPT DAY 1 – LOCATORS, SELECTORS AND ASSERTIONS
+Date: 5 November 2026
+
+
+============================================================ 
+LEARNING OBJECTIVES 
+============================================================
+
+By the end of this class, students should be able to:
+
+1.  Understand how Playwright identifies web elements.
+2.  Locate buttons, textboxes, links and other elements.
+3.  Use different locator strategies.
+4.  Identify multiple matching elements.
+5.  Perform actions using locators.
+6.  Validate application behavior using Playwright assertions.
+7.  Write a complete test case using locators and assertions.
+
+
+Introduction and revision 
+Understanding Playwright locators 
+Locator actions
+Handling multiple elements
+Assertions
+Complete practical test case 
+Recap and questions
+
+Additional 30 minutes: Student assignment and independent practice.
+
+============================================================ 
+UNDERSTANDING LOCATORS 
+============================================================
+
+WHAT IS A LOCATOR?
+
+A locator is a mechanism used by Playwright to identify an element on a
+webpage.
+
+Examples of web elements: - Search textbox - Login button - Username
+field - Password field - Navigation link - Checkbox
+
+Consider this HTML:
+
+Login
+
+Playwright can identify these elements using their attributes:
+
+page.locator(‘#username’); page.locator(‘#login’);
+
+COMMON CSS SELECTOR MAPPING
+
+HTML attribute Playwright CSS locator
+
+id=“username” #username class=“login-btn” .login-btn name=“email”
+[name=“email”] type=“text” [type=“text”]
+
+TYPES OF PLAYWRIGHT LOCATORS
+
+A. getByRole() – Recommended
+
+Identifies elements using their accessibility role and accessible name.
+
+Examples:
+
+page.getByRole(‘button’, { name: ‘Login’ }); page.getByRole(‘link’, {
+name: ‘Home’ }); page.getByRole(‘textbox’, { name: ‘Username’ });
+page.getByRole(‘checkbox’, { name: ‘Remember me’ });
+
+Common roles:
+
+Role Typical element
+
+button Button textbox Text input link Anchor link checkbox Checkbox
+radio Radio button heading Heading combobox Select/dropdown control img
+Image
+
+note: Explain that getByRole() uses the role and accessible
+name, not necessarily the visible HTML tag name. A textbox may be
+identified through its associated label or accessible name.
+
+B. getByText()
+
+Finds elements based on text content.
+
+Examples:
+
+page.getByText(‘Welcome’); page.getByText(‘Login successful’);
+page.getByText(‘Forgot Password?’);
+
+C. getByLabel()
+
+Useful for form controls associated with labels.
+
+Examples:
+
+page.getByLabel(‘Email’); page.getByLabel(‘Password’);
+
+D. getByPlaceholder()
+
+Identifies elements using placeholder text.
+
+Examples:
+
+page.getByPlaceholder(‘Enter your email’); page.getByPlaceholder(‘Search
+here’);
+
+E. getByAltText()
+
+Useful for images with alternative text.
+
+Example:
+
+page.getByAltText(‘Company Logo’);
+
+F. getByTestId()
+
+Identifies elements using a dedicated testing attribute.
+
+HTML:
+
+Submit
+Playwright:
+
+page.getByTestId(‘submit-btn’);
+
+G. locator() – CSS and XPath
+
+Examples:
+
+page.locator(‘#username’); page.locator(‘.login-button’);
+page.locator(‘input[name=“email”]’);
+page.locator(‘//button[text()=“Login”]’);
+
+note: CSS and XPath are useful when user-facing locators are
+not practical. Prefer getByRole(), getByLabel() and other user-facing
+locators when they provide a reliable way to identify the element.
+
+============================================================ 
+LOCATOR ACTIONS
+============================================================
+
+Once Playwright identifies an element, we can interact with it.
+
+Method Purpose
+
+click() Click an element dblclick() Double-click an element fill() Enter
+or replace text in an input clear() Clear an input type() Type text
+character by character press() Press a keyboard key check() Select a
+checkbox or radio button uncheck() Deselect a checkbox hover() Move the
+mouse over an element focus() Focus an element
+
+EXAMPLES
+
+Enter text:
+
+await page.getByPlaceholder(‘Enter Name’).fill(‘Arun’);
+
+Click a button:
+
+await page.getByRole(‘button’, { name: ‘Submit’ }).click();
+
+Select a checkbox:
+
+await page.getByLabel(‘Remember me’).check();
+
+Deselect a checkbox:
+
+await page.getByLabel(‘Remember me’).uncheck();
+
+Press Enter:
+
+await page.getByPlaceholder(‘Search’).press(‘Enter’);
+
+FILL() VERSUS TYPE()
+
+Example:
+
+await page.locator(‘#username’).fill(‘Arun’); await
+page.locator(‘#username’).type(‘Arun’);
+
+fill(): - Replaces the existing input value with the supplied text. -
+Preferred for normal form input.
+
+type(): - Simulates typing characters into the field. - It is a
+legacy-style method; for explicit character-by-character keyboard input,
+pressSequentially() is also available.
+
+For normal form automation, prefer fill().
+
+============================================================ 
+HANDLING MULTIPLE ELEMENTS
+============================================================
+
+A page may contain multiple elements matching the same locator.
+
+Example:
+
+const links = page.getByRole(‘link’);
+
+console.log(await links.count());
+
+Important locator methods:
+
+first() – Selects the first matching element. last() – Selects the last
+matching element. nth(2) – Selects the third matching element. count() –
+Returns the number of matching elements.
+
+Examples:
+
+await links.first().click(); await links.last().click(); await
+links.nth(2).click();
+
+Remember: Indexing starts from zero.
+
+Index 0 = First element Index 1 = Second element Index 2 = Third element
+
+COUNT EXAMPLE
+
+const buttons = page.getByRole(‘button’);
+
+const totalButtons = await buttons.count();
+
+console.log(‘Total buttons:’, totalButtons);
+
+LOCATOR FILTERING
+
+Filtering helps identify a particular item among repeated containers.
+
+Example:
+
+const product = page.locator(‘.product’) .filter({ hasText: ‘Laptop’ });
+
+note: Explain that a locator can match more than one element.
+Actions such as click() generally require a unique matching element. Use
+count(), first(), last(), nth() or a more specific locator when
+appropriate.
+
+============================================================ 6.
+ASSERTIONS IN PLAYWRIGHT
+============================================================
+
+WHY DO WE NEED ASSERTIONS?
+
+Suppose we click the Login button. How do we confirm that login was
+successful?
+
+We use assertions to verify the expected result.
+
+Import test and expect:
+
+const { test, expect } = require(‘@playwright/test’);
+
+1.  VISIBILITY ASSERTION
+
+await expect(page.getByText(‘Welcome’)).toBeVisible();
+
+2.  HIDDEN ASSERTION
+
+await expect(page.getByText(‘Loading’)).toBeHidden();
+
+3.  TEXT ASSERTION
+
+await expect(page.locator(‘#message’)) .toHaveText(‘Login Successful’);
+
+4.  INPUT VALUE ASSERTION
+
+await expect(page.locator(‘#username’)) .toHaveValue(‘Arun’);
+
+5.  ENABLED ASSERTION
+
+await expect( page.getByRole(‘button’, { name: ‘Submit’ })
+).toBeEnabled();
+
+6.  DISABLED ASSERTION
+
+await expect( page.getByRole(‘button’, { name: ‘Submit’ })
+).toBeDisabled();
+
+7.  ELEMENT COUNT ASSERTION
+
+await expect(page.locator(‘.product’)).toHaveCount(5);
+
+8.  ATTRIBUTE ASSERTION
+
+await expect(page.locator(‘#username’)) .toHaveAttribute(‘type’,
+‘text’);
+
+IMPORTANT: JAVASCRIPT ASSERTION VERSUS PLAYWRIGHT ASSERTION
+
+Ordinary assertion:
+
+expect(value).toBe(10);
+
+Web-first assertion:
+
+await expect(page.locator(‘#message’)).toBeVisible();
+
+Difference:
+
+-   An ordinary assertion checks the value immediately.
+-   A Playwright web-first assertion retries the check until it passes
+    or the assertion timeout is reached.
+
+This retry behavior is especially useful for dynamic web applications.
+
+============================================================ 7. COMPLETE
+PRACTICAL TEST CASE
+============================================================
+
+Practice website:
+
+https://testautomationpractice.blogspot.com/
+
+Exercise: Verify the page title and interact with the Name textbox.
+
+COMPLETE CODE:
+
+const { test, expect } = require(‘@playwright/test’);
+
+test(‘Verify page and enter student name’, async ({ page }) => {
+
+    // Step 1: Navigate to the application
+    await page.goto(
+        'https://testautomationpractice.blogspot.com/'
+    );
+
+    // Step 2: Verify the page title
+    await expect(page).toHaveTitle(
+        /Automation Testing Practice/
+    );
+
+    // Step 3: Identify the Name textbox
+    const name = page.locator('#name');
+
+    // Step 4: Verify textbox visibility
+    await expect(name).toBeVisible();
+
+    // Step 5: Enter the student name
+    await name.fill('Arun');
+
+    // Step 6: Verify the entered value
+    await expect(name).toHaveValue('Arun');
+
+    // Step 7: Verify textbox is enabled
+    await expect(name).toBeEnabled();
+
+});
+
+EXPLAIN THE TEST STEP BY STEP
+
+1.  require(‘@playwright/test’) Imports Playwright’s test runner and
+    assertion library.
+
+2.  test() Defines a test case.
+
+3.  async ({ page }) Receives the built-in page fixture. The page
+    represents a browser tab.
+
+4.  page.goto() Navigates to the application URL.
+
+5.  expect(page).toHaveTitle() Verifies the browser page title.
+
+6.  page.locator(‘#name’) Identifies the Name textbox using its ID.
+
+7.  toBeVisible() Verifies that the textbox is visible.
+
+8.  fill(‘Arun’) Enters the supplied text.
+
+9.  toHaveValue(‘Arun’) Verifies that the textbox contains the expected
+    value.
+
+10. toBeEnabled() Verifies that the textbox is enabled.
+
+Teaching activity: Ask students to predict the result of each step
+before running the test. Then ask them to change the entered name and
+expected value.
+
+============================================================ 8.
+FIVE-MINUTE RECAP (85–90 MINUTES)
+============================================================
+
+Ask students these questions:
+
+1.  What is the difference between locator() and getByRole()?
+2.  What is the difference between fill() and type()?
+3.  Why does nth(2) identify the third element?
+4.  What is the difference between toBeVisible() and isVisible()?
+5.  Why do we prefer web-first assertions?
+
+IMPORTANT EXPLANATION:
+
+toBeVisible():
+
+await expect(locator).toBeVisible();
+
+-   An assertion.
+-   Automatically retries until success or timeout.
+-   Fails the test if the condition is not met.
+
+isVisible():
+
+const visible = await locator.isVisible();
+
+-   Returns true or false.
+-   Checks visibility immediately.
+-   Does not automatically retry.
+
+============================================================ 9. STUDENT
+PRACTICAL ASSIGNMENT (ADDITIONAL 30 MINUTES)
+============================================================
+
+Use the practice website:
+
+https://testautomationpractice.blogspot.com/
+
+Complete these tasks independently:
+
+1.  Enter a student name. Expected learning: fill()
+
+2.  Enter an email address. Expected learning: fill()
+
+3.  Enter a phone number. Expected learning: fill()
+
+4.  Select a gender option. Expected learning: check()
+
+5.  Select multiple days. Expected learning: checkbox handling
+
+6.  Verify the selected checkboxes. Expected learning: toBeChecked()
+
+7.  Count all links on the page. Expected learning: count()
+
+8.  Verify the page heading. Expected learning: getByRole()
+
+9.  Verify the entered name. Expected learning: toHaveValue()
+
+10. Verify the Submit button is visible and enabled. Expected learning:
+    toBeVisible(), toBeEnabled()
+
+ASSIGNMENT RULES
+
+-   Students must write their own locators.
+-   Do not simply copy the teacher’s code.
+-   Use meaningful variable names.
+-   Add comments explaining important steps.
+-   Use assertions to validate expected results.
+-   Execute the test and investigate any failures.
+
+============================================================ 10. DAY 1
+COMPLETION CHECKLIST
+============================================================
+
+[ ] Understand what a locator is. [ ] Use getByRole(). [ ] Use
+getByText(). [ ] Use getByLabel(). [ ] Use getByPlaceholder(). [ ] Use
+getByAltText(). [ ] Use getByTestId(). [ ] Use CSS and XPath locators. [
+] Perform basic locator actions. [ ] Handle multiple matching elements.
+[ ] Understand Playwright assertions. [ ] Understand web-first assertion
+retry behavior. [ ] Write and execute a complete test case. [ ] Complete
+the practical assignment.
+
+============================================================ TEACHER’S
+NOTES ============================================================
+
+1.  Do not spend time teaching JavaScript fundamentals again.
+2.  Explain every locator with a real webpage element.
+3.  Show students how to inspect an element in browser DevTools.
+4.  Explain why a locator is accurate and how to verify that it matches
+    the intended element.
+5.  Demonstrate the difference between a locator and an action.
+6.  Explain the purpose of every assertion before showing its syntax.
+7.  Encourage students to write the code independently.
+8.  If a locator returns zero elements, inspect the page, verify the
+    selector and check whether the element is inside an iframe or
+    appears only after an interaction.
+
+END OF DAY 1
+
+
+
+Explain fixture:
+
+1. First, understand the login scenario
+Our automation requirements:
+    1. Open the login page.
+    2. Enter username.
+    3. Enter password.
+    4. Click Login.
+    5. Verify successful login.
+
+2. Without understanding fixtures
+    First, imagine creating browser resources manually.
+
+    const { chromium } = require('@playwright/test');
+
+    async function loginTest() {
+
+        // Launch browser
+        const browser = await chromium.launch({
+            headless: false
+        });
+
+        // Create browser context
+        const context = await browser.newContext();
+
+        // Create browser page
+        const page = await context.newPage();
+
+        // Navigate to login page
+        await page.goto('https://example.com/login');
+
+        // Enter username
+        await page.locator('#username').fill('admin');
+
+        // Enter password
+        await page.locator('#password').fill('admin123');
+
+        // Click login
+        await page.locator('#login').click();
+
+        // Close browser
+        await browser.close();
+    }
+
+    loginTest();
+
+
+    Here, we manually created:
+    - Browser
+    - Context
+    - Page
+    We also need to manage their cleanup.
+
+    Imagine writing 50 test cases. Repeating this setup and cleanup in every test would be unnecessary.
+
+    This is one of the problems Playwright fixtures solve.
+
+
+3. With Playwright fixtures
+    Now let's write the same test using Playwright's built-in fixtures.
+    const { test, expect } = require('@playwright/test');
+
+    test('Login functionality', async ({ page }) => {
+
+        // Step 1: Open login page
+        await page.goto('https://example.com/login');
+
+        // Step 2: Enter username
+        await page.locator('#username').fill('admin');
+
+        // Step 3: Enter password
+        await page.locator('#password').fill('admin123');
+
+        // Step 4: Click login
+        await page.locator('#login').click();
+
+        // Step 5: Verify successful login
+        await expect(page).toHaveURL(/dashboard/);
+
+    });
+
+    // async ({ page }) => {
+
+
+    Where did page come from?
+
+    We didn't create it!
+
+    Playwright provides it automatically because we requested the page fixture.
+
+    Behind the scenes, Playwright manages the required browser resources.
+
+    Typically, it:
+    1. Launches a browser when needed.
+    2. Creates an isolated browser context for the test.
+    3. Creates a page inside that context.
+    4. Passes the page to the test.
+    5. Cleans up the test's resources afterward.
+
+
+    How the fixtures are connected:
+    Browser fixture => Browser instance
+
+    Context fixture => Isolated browser session
+
+    Page fixture => Browser tab where login happens
+
+4. Understanding three important fixtures
+    Let's use the same login example.
+
+    A. browser fixture
+
+    Represents the browser instance.
+    test('Check browser', async ({ browser }) => {
+
+        console.log(browser.browserType().name());
+
+    });
+
+
+    Output for a Chromium test:
+    chromium
+
+
+    Use it when you need browser-level operations.
+
+    B. context fixture
+
+    Represents an isolated browser session.
+    test('Check context', async ({ context }) => {
+
+        console.log(context.pages().length);
+
+    });
+
+
+    A context can maintain its own:
+    - Cookies
+    - Local storage
+    - Session storage
+    - Browser permissions
+    C. page fixture
+
+    Represents a browser tab.
+    test('Check page', async ({ page }) => {
+
+        await page.goto('https://example.com');
+
+        console.log(await page.title());
+
+    });
+
+
+    Use it for normal UI automation.
