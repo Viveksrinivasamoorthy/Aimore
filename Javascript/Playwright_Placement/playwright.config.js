@@ -15,7 +15,25 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: { trace: 'on', screenshot: 'on', video: 'on' },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      trace: 'on', // Enable trace for this project.
+      video: 'on', // Enable video recording for this project.
+    },
 
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },]
+
+  /*
   projects: browsers.flatMap(({ name, device }) => [
     // 1) logs in with this browser and saves its own auth file
     {
@@ -30,5 +48,5 @@ export default defineConfig({
       use: { ...device, storageState: `playwright/.auth/${name}.json` },
       dependencies: [`setup-${name}`],
     },
-  ]),
+  ]), */
 });

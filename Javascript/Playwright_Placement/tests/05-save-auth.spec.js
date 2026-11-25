@@ -10,6 +10,6 @@ test('save login state', async ({ page }, testInfo) => {
   await expect(page.locator('.title')).toHaveText('Products');
 
   // setup-chromium -> chromium, setup-firefox -> firefox, etc.
-  const browserName = testInfo.project.name.replace('setup-', '');
-  await page.context().storageState({ path: `playwright/.auth/${browserName}.json` });
+  // const browserName = testInfo.project.name.replace('setup-', '');
+  //await page.context().storageState({ path: `playwright/.auth/${browserName}.json` });
 });
